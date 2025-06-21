@@ -119,20 +119,13 @@ const boxes = document.querySelectorAll("#box");
 // Add click listeners for game logic
 for (let box of boxes) {
   box.addEventListener("click", () => {
-    box.innerHTML =  "O" ;
-    box.style.color =  "#00d4ff";
+    box.innerHTML =  turn0 ? "O" : 'X';
+    box.style.color = turn0 ? "#00d4ff" : '#ff0000';
     box.disabled = true;
     box.style.cursor = "default";
     box.style.pointerEvents = "none";
-    turn0 = false;
-    console.log(box.innerText);
-    // computer();
+    turn0 = !turn0;
     checkWinner();
-
-    if(!winner){
-        computer();
-        turn0 = true;
-    }
   });
 }
 
@@ -180,43 +173,3 @@ function checkWinner() {
 
 // Attach the reset functionality to the button
 resetButton.addEventListener("click", resetGame);
-
-
-function computer() {
-    // Check if the computer or the player can win in the next move
-    for (const combo of winList) {
-      const [a, b, c] = combo;
-      const values = [boxes[a].innerText, boxes[b].innerText, boxes[c].innerText];
-  
-      // Check if the computer can win
-      if (values.filter((val) => val === "X").length === 2 && values.includes("")) {
-        const emptyIndex = values.indexOf("");
-        boxes[combo[emptyIndex]].innerText = "X";
-        boxes[combo[emptyIndex]].style.color = "#ff5555";
-        boxes[combo[emptyIndex]].disabled = true;
-        checkWinner();
-        return;
-      }
-  
-      // Check if the player can win, block it
-      if (values.filter((val) => val === "O").length === 2 && values.includes("")) {
-        const emptyIndex = values.indexOf("");
-        boxes[combo[emptyIndex]].innerText = "X";
-        boxes[combo[emptyIndex]].style.color = "#ff5555";
-        boxes[combo[emptyIndex]].disabled = true;
-        return;
-      }
-    }
-  
-    // If no winning or blocking move, pick the first available box
-    for (const box of boxes) {
-      if (!box.innerText) {
-        box.innerText = "X";
-        box.style.color = "#ff5555";
-        box.disabled = true;
-        break;
-      }
-    }
-    checkWinner();
-  }
-  
